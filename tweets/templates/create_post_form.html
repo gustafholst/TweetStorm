@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>New tweet</h1>
+
+  <form action="/tweets/create_post/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Tweeeet">
+  </form>
+
+{% endblock %}

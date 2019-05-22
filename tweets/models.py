@@ -13,6 +13,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.text
+
 class Vote(models.Model):
     """
     Vote model

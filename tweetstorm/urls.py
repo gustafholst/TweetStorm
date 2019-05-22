@@ -15,7 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include
+from django.views.generic import RedirectView
+from django.urls import include
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tweets/', include('tweets.urls')),
 ]
+
+
+urlpatterns += [
+    path('', RedirectView.as_view(url='/tweets/', permanent=True)),
+]
+
+
+

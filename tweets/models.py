@@ -11,8 +11,7 @@ class Post(models.Model):
     """
     text = models.TextField(max_length=2000)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_posted = models.DateField(default=date.today)
-
+    date_posted = models.DateTimeField(auto_now_add=True)
 
 class Vote(models.Model):
     """

@@ -4,5 +4,8 @@ from django.contrib import admin
 
 from tweets.models import Post, Vote
 
-admin.site.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    readonly_fields = ('date_posted',)
+
+admin.site.register(Post, PostAdmin)
 admin.site.register(Vote)

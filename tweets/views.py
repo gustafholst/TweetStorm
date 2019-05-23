@@ -24,7 +24,7 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-# @login_required
+@login_required
 def create_post(request):
 
     if request.method == "POST":
@@ -45,12 +45,10 @@ def create_post(request):
 def display_all_posts_by_user(request, user_id):
     all_posts = Post.objects.filter(author=user_id)
 
-    context = {
-        'posts': all_posts
-    }
+    return render(request, 'index.html', {'posts': all_posts })
 
-    return render(request, 'index.html', context=context)
 
+@login_required
 @require_http_methods(["POST"])
 def delete_post(request):
     post_id = request.POST.get('post_id')
@@ -66,3 +64,8 @@ def delete_post(request):
     post.delete()
 
     return render(request, 'index.html', {'message': 'Tweet deleted'})
+
+
+def login(request):
+    # change this
+    return render(request, 'index.html', {'message': 'logged in'})

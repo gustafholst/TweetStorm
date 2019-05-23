@@ -70,6 +70,14 @@ def delete_post(request):
 
 
 def login(request):
+    # todo: log user in
 
     # change this
     return render(request, 'index.html', {'message': 'logged in'})
+
+
+def logout(request):
+    # todo: log user out
+    
+    # change this
+    return render(request, 'index.html', {'message': 'logged out'})

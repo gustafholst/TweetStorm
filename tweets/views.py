@@ -94,3 +94,6 @@ def logout(request):
 
     # change this
     return render(request, 'index.html', {'message': 'logged out'})
+
+def feed(request):
+    return render(request,'feed.html')

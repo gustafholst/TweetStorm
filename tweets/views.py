@@ -11,9 +11,11 @@ class CreatePostForm(forms.Form):
     post_text = forms.CharField(widget=forms.Textarea( \
         attrs={"rows":10, "cols":60}), label='Tweet away', required=True)
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(label="User name", required="True")
     password = forms.CharField(label="Password", required=True, widget=forms.PasswordInput())
+
 
 def index(request):
     """View function for home page of site."""
@@ -78,6 +80,6 @@ def login(request):
 
 def logout(request):
     # todo: log user out
-    
+
     # change this
     return render(request, 'index.html', {'message': 'logged out'})

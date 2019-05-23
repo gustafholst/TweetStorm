@@ -13,6 +13,15 @@ class Post(models.Model):
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def num_up_votes(self):
+        # smoother way to do this?
+        return Vote.objects.filter(post=self).filter(voter=self.author).filter(vote=1).count()
+
+    @property
+    def num_down_votes(self):
+        return Vote.objects.filter(post=self).filter(voter=self.author).filter(vote=-1).count()
+
     class Meta:
         ordering = ('-date_posted',)
 

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import Http404, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth import authenticate, login, logout
 
 def index(request):
     """View function for home page of site."""
@@ -83,14 +84,20 @@ def vote_down(request):
 
     return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
-def login(request):
-    # todo: log user in
+def login_view(request):
+    username = request.POST['uname']
+    password = request.POST['psw']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        messages.add_message(request, messages.INFO, 'You are logged in!')
+    else:
+        messages.add_message(request, messages.WARNING, 'Incorrect combination username/password')
 
-    # change this
-    return render(request, 'index.html', {'message': 'logged in'})
+    return HttpResponseRedirect("/")
 
-def logout(request):
-    # todo: log user out
+def logout_view(request):
+    logout(request)
+    messages.add_message(request, messages.INFO, 'Successfully logged out!')
 
-    # change this
-    return render(request, 'index.html', {'message': 'logged out'})
+    return HttpResponseRedirect("/")

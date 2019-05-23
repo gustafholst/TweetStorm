@@ -1,10 +1,9 @@
 <div class="new_post">
-  <h1>New tweet</h1>
+  <h3>New tweet</h3>
 
   <form action="/tweets/create_post/" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Tweeeet">
   </form>
-
 </div>

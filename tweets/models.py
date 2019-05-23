@@ -10,7 +10,7 @@ class Post(models.Model):
     Post model
     """
     text = models.TextField(max_length=2000)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

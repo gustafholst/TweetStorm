@@ -18,6 +18,7 @@ from django.urls import path
 from django.conf.urls import include
 from django.views.generic import RedirectView
 from django.urls import include
+from tweets import views
 
 
 urlpatterns = [
@@ -29,6 +30,3 @@ urlpatterns = [
 urlpatterns += [
     path('', RedirectView.as_view(url='/tweets/', permanent=True)),
 ]
-
-
-

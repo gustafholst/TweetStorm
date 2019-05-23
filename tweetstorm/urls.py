@@ -23,12 +23,10 @@ from django.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('tweets.urls')),
+    path('login/', views.login) 
 ]
 
 
 urlpatterns += [
     path('', RedirectView.as_view(url='/tweets/', permanent=True)),
 ]
-
-
-

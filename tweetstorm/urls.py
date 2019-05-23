@@ -24,7 +24,11 @@ from tweets import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('tweets.urls')),
+<<<<<<< HEAD
     path('login/', views.login)
+=======
+    path('login/', views.login) 
+>>>>>>> 36fb59d4e8d14ff489c0b55960a644f071d20934
 ]
 
 

@@ -13,6 +13,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('-date_posted',)
+
     def __str__(self):
         return self.text
 

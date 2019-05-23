@@ -11,7 +11,7 @@ class CreatePostForm(forms.Form):
     post_text = forms.CharField(widget=forms.Textarea( \
         attrs={"rows":10, "cols":60}), label='Tweet away', required=True)
 
-
+# this class is not used at the moment (consider refactor?)
 class LoginForm(forms.Form):
     username = forms.CharField(label="User name", required="True")
     password = forms.CharField(label="Password", required=True, widget=forms.PasswordInput())
@@ -69,6 +69,36 @@ def delete_post(request):
     post.delete()
 
     return render(request, 'index.html', {'message': 'Tweet deleted'})
+
+
+@login_required
+@require_http_methods(["POST"])
+def vote_up(request):
+    post_id = request.POST.get('post_id')
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        raise Http404("Post does not exist")
+
+    post.vote_set.create(vote=1)
+
+    return render(request, 'index.html', {'message': 'Tweet upvoted'})
+
+
+@login_required
+@require_http_methods(["POST"])
+def vote_down(request):
+    post_id = request.POST.get('post_id')
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        raise Http404("Post does not exist")
+
+    post.vote_set.create(vote=-1)
+
+    return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
 
 def login(request):

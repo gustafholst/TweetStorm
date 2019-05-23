@@ -16,11 +16,11 @@ class Post(models.Model):
     @property
     def num_up_votes(self):
         # smoother way to do this?
-        return Vote.objects.filter(post=self).filter(voter=self.author).filter(vote=1).count()
+        return Vote.objects.filter(post=self).filter(vote=1).count()
 
     @property
     def num_down_votes(self):
-        return Vote.objects.filter(post=self).filter(voter=self.author).filter(vote=-1).count()
+        return Vote.objects.filter(post=self).filter(vote=-1).count()
 
     class Meta:
         ordering = ('-date_posted',)

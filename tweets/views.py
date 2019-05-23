@@ -81,7 +81,7 @@ def vote_up(request):
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
-    post.vote_set.create(vote=1)
+    post.vote_set.create(vote=1, voter=request.user)
 
     return render(request, 'index.html', {'message': 'Tweet upvoted'})
 
@@ -96,7 +96,7 @@ def vote_down(request):
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
-    post.vote_set.create(vote=-1)
+    post.vote_set.create(vote=-1, voter=request.user)
 
     return render(request, 'index.html', {'message': 'Tweet downvoted'})
 

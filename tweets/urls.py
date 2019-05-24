@@ -9,5 +9,4 @@ urlpatterns = [
     path('logout/', views.logout_view, name="logout"),
     path('voteup/', views.vote_up, name="tweets-vote_up"),
     path('votedown/', views.vote_down, name="tweets-vote_down"),
-    path('feed/',views.feed,name="feed")
 ]

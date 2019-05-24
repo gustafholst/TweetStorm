@@ -1,0 +1,29 @@
+html {
+    text-align: center;
+}
+
+body {
+    background-color: #004182;
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+
+form input {
+    background-color: #0059b3;
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.card {
+    background-color: #0059b3;
+    border-radius: 20px;
+}
+
+.card input {
+    margin: auto;
+    width: 200px;
+    border: none;
+    border-radius: 6px;
+}

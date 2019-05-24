@@ -36,18 +36,13 @@ def create_post(request):
 
 
 def filter_posts(request):
-
-    filtered_posts = Post.objects.all()
+    filtered_posts = Post.objects.none()
 
     if request.GET.get('user'):
-        try:
-            user = User.objects.get(username=request.GET['user'])
-            filtered_posts = filtered_posts.filter(author=user)
-        except User.DoesNotExist:
-            filtered_posts = Post.objects.none()
+        filtered_posts = Post.objects.filter(author__username=request.GET['user'])
 
     if request.GET.get('word'):
-        filtered_posts = filtered_posts.filter(text__icontains=request.GET['word'])
+        filtered_posts = Post.objects.filter(text__icontains=request.GET['word'])
 
     return render(request, 'index.html', {'posts': filtered_posts })
 

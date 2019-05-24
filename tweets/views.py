@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import Http404, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 def index(request):
     """View function for home page of site."""
@@ -33,10 +34,23 @@ def create_post(request):
 
     return HttpResponseRedirect("/")
 
-def display_all_posts_by_user(request, user_id):
-    all_posts = Post.objects.filter(author=user_id)
 
-    return render(request, 'index.html', {'posts': all_posts })
+def filter_posts(request):
+
+    filtered_posts = Post.objects.all()
+
+    if request.GET.get('user'):
+        try:
+            user = User.objects.get(username=request.GET['user'])
+            filtered_posts = filtered_posts.filter(author=user)
+        except User.DoesNotExist:
+            filtered_posts = Post.objects.none()
+
+    if request.GET.get('word'):
+        filtered_posts = filtered_posts.filter(text__icontains=request.GET['word'])
+
+    return render(request, 'index.html', {'posts': filtered_posts })
+
 
 @login_required
 @require_http_methods(["POST"])

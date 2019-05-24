@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tweets.apps.TweetsConfig'
+    'tweets.apps.TweetsConfig',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'tweetstorm.urls'
@@ -83,6 +86,13 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -126,3 +136,20 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+# django-axes configuration
+# https://django-axes.readthedocs.io/en/latest/4_configuration.html
+
+# Allow 5 login attempts
+AXES_FAILURE_LIMIT = 5
+
+# After maximum number of failed login attempts, block IP address (for a while; see below).
+# It's possible to block a certain user+IP combination rather than the IP. It's a trade-off:
+# if user+IP combination is blocked, a bot could try to authenticate with a large number of different
+# users. This is prevented here. On the other hand, if several people share an IP address, a
+# malicious user could do a number of failed login attempts to deliberately prevent legitimate
+# users from logging in.
+AXES_LOCK_OUT_AT_FAILURE = True
+
+# Clear failed login attempts after an hour
+AXES_COOLOFF_TIME = 1

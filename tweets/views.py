@@ -7,6 +7,8 @@ from django.views.decorators.http import require_http_methods
 from django.http import Http404, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
+from django.utils.timesince import timesince
+from axes.models import AccessLog
 
 def index(request):
     """View function for home page of site."""
@@ -85,12 +87,18 @@ def vote_down(request):
     return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
 def login_view(request):
-    username = request.POST['uname']
-    password = request.POST['psw']
+    username = request.POST['username']
+    password = request.POST['password']
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        messages.add_message(request, messages.INFO, 'You are logged in!')
+
+        try:
+            previous_login = AccessLog.objects.filter(username__exact=username).order_by('-attempt_time')[1]
+            previous_login_time = timesince(previous_login.attempt_time)
+            messages.add_message(request, messages.INFO, f"Welcome back {username}! You were last logged in {previous_login_time} ago from {previous_login.ip_address}")
+        except IndexError:
+            messages.add_message(request, messages.INFO, 'You are logged in!')
     else:
         messages.add_message(request, messages.WARNING, 'Incorrect combination username/password')
 

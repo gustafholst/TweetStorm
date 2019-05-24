@@ -101,3 +101,6 @@ def logout_view(request):
     messages.add_message(request, messages.INFO, 'Successfully logged out!')
 
     return HttpResponseRedirect("/")
+
+def feed(request):
+    return render(request,'feed.html')

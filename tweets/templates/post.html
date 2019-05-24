@@ -1,7 +1,11 @@
 <div class="tweet">
-  <p>
-    {{ post.text }}<br>
-    {{ post.author }} | {{ post.date_posted }} |
-    {{ post.num_up_votes }} | {{ post.num_down_votes }}
-  </p>
+	<div class='card'>
+      <div class="card-body">
+          <div class="row">
+              <div class="col-md-10"><b>{{ post.author }} | {{ post.date_posted }} </b></div>
+              <div class="col-md-2 text-right"> <a href="#"><span class="text-danger fa fa-window-close"></span></a></div>
+          </div>
+        <p>{{ post.text }}</p>
+      </div>
+    </div>
 </div>

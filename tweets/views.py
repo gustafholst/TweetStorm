@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import Http404, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.utils.timesince import timesince
+from axes.models import AccessLog
 
 def index(request):
     """View function for home page of site."""
@@ -32,10 +36,18 @@ def create_post(request):
 
     return HttpResponseRedirect("/")
 
-def display_all_posts_by_user(request, user_id):
-    all_posts = Post.objects.filter(author=user_id)
 
-    return render(request, 'index.html', {'posts': all_posts })
+def filter_posts(request):
+    filtered_posts = Post.objects.none()
+
+    if request.GET.get('user'):
+        filtered_posts = Post.objects.filter(author__username=request.GET['user'])
+
+    if request.GET.get('word'):
+        filtered_posts = Post.objects.filter(text__icontains=request.GET['word'])
+
+    return render(request, 'index.html', {'posts': filtered_posts })
+
 
 @login_required
 @require_http_methods(["POST"])
@@ -83,17 +95,26 @@ def vote_down(request):
 
     return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
-def login(request):
-    # todo: log user in
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
 
-    # change this
-    return render(request, 'index.html', {'message': 'logged in'})
+        try:
+            previous_login = AccessLog.objects.filter(username__exact=username).order_by('-attempt_time')[1]
+            previous_login_time = timesince(previous_login.attempt_time)
+            messages.add_message(request, messages.INFO, f"Welcome back {username}! You were last logged in {previous_login_time} ago from {previous_login.ip_address}")
+        except IndexError:
+            messages.add_message(request, messages.INFO, 'You are logged in!')
+    else:
+        messages.add_message(request, messages.WARNING, 'Incorrect combination username/password')
 
-def logout(request):
-    # todo: log user out
+    return HttpResponseRedirect("/")
 
-    # change this
-    return render(request, 'index.html', {'message': 'logged out'})
+def logout_view(request):
+    logout(request)
+    messages.add_message(request, messages.INFO, 'Successfully logged out!')
 
-def feed(request):
-    return render(request,'feed.html')
+    return HttpResponseRedirect("/")

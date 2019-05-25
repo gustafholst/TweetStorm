@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
-from axes.models import AccessLog
+#from axes.models import AccessLog
 
 def index(request):
     """View function for home page of site."""

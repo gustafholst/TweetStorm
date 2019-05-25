@@ -13,38 +13,41 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-2">
-      {% block sidebar %}
+  <main role="main">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3">
+        {% block sidebar %}
+          <a href="/">Home</a><br>
+          {% if user.is_authenticated %}
+            <p>Logged in as {{ user.username }}</p>
+            <p><a href="{% url 'change_password' %}">Change password</a></p>
+            <form method="post" action="{% url 'safe_logout' %}">
+              {% csrf_token %}
+              <input type="submit" value="Logout" />
+            </form>
 
-        {% if user.is_authenticated %}
-          <p>Logged in as {{ user.username }}</p>
-          <form method="post" action="{% url 'safe_logout' %}">
-            {% csrf_token %}
-            <input type="submit" value="Logout" />
-          </form>
-          <p><a href="{% url 'change_password' %}">Change password</a></p>
-        {% else %}
-          <a href="{% url 'login' %}">Login</a>
-        {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}">Login</a><br>
+            <a href="{% url 'django_registration_register' %}">Sign up</a>
+          {% endif %}
+       {% endblock %}
+        </div>
+        <div class="col-sm-9">
+          <h1>TWEETSTORM</h1>
 
-     {% endblock %}
-      </div>
-      <div class="col-sm-10 ">
-        <h1>TWEETSTORM</h1>
+          {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
 
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% block content %}{% endblock %}
+          {% block content %}{% endblock %}
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </body>
 </html>

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tweets.apps.TweetsConfig',
     'axes',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,9 @@ AXES_LOCK_OUT_AT_FAILURE = True
 
 # Clear failed login attempts after an hour
 AXES_COOLOFF_TIME = 1
+
+# Where to redirect user after login/logout
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

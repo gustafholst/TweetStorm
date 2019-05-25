@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block title %}<title>TWEETSTORM</title>{% endblock %}
+  <title>{% block title %}{% endblock %} | TWEETSTORM</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% load static %}
@@ -18,13 +18,15 @@
       <div class="col-sm-2">
       {% block sidebar %}
 
-        {% if request.user.is_authenticated %}
-          <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" />
+        {% if user.is_authenticated %}
+          <p>Logged in as {{ user.username }}</p>
+          <form method="post" action="{% url 'safe_logout' %}">
+            {% csrf_token %}
+            <input type="submit" value="Logout" />
           </form>
+          <p><a href="{% url 'change_password' %}">Change password</a></p>
         {% else %}
-          {% include "login_form.html" %}
+          <a href="{% url 'login' %}">Login</a>
         {% endif %}
 
      {% endblock %}

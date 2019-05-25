@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Post, Vote
-from .forms import CreatePostForm
+from .forms import CreatePostForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -9,6 +9,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
+from django.views.decorators.csrf import csrf_protect
 from axes.models import AccessLog
 
 def index(request):
@@ -95,26 +96,8 @@ def vote_down(request):
 
     return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
-def login_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-
-        try:
-            previous_login = AccessLog.objects.filter(username__exact=username).order_by('-attempt_time')[1]
-            previous_login_time = timesince(previous_login.attempt_time)
-            messages.add_message(request, messages.INFO, f"Welcome back {username}! You were last logged in {previous_login_time} ago from {previous_login.ip_address}")
-        except IndexError:
-            messages.add_message(request, messages.INFO, 'You are logged in!')
-    else:
-        messages.add_message(request, messages.WARNING, 'Incorrect combination username/password')
-
-    return HttpResponseRedirect("/")
-
-def logout_view(request):
+@csrf_protect
+@require_http_methods(["POST"])
+def safe_logout(request):
     logout(request)
-    messages.add_message(request, messages.INFO, 'Successfully logged out!')
-
     return HttpResponseRedirect("/")

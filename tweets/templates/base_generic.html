@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block title %}<title>TWEETSTORM</title>{% endblock %}
+  <title>{% block title %}{% endblock %} | TWEETSTORM</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% load static %}
@@ -13,36 +13,41 @@
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-2">
-      {% block sidebar %}
+  <main role="main">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3">
+        {% block sidebar %}
+          <a href="/">Home</a><br>
+          {% if user.is_authenticated %}
+            <p>Logged in as {{ user.username }}</p>
+            <p><a href="{% url 'change_password' %}">Change password</a></p>
+            <form method="post" action="{% url 'safe_logout' %}">
+              {% csrf_token %}
+              <input type="submit" value="Logout" />
+            </form>
 
-        {% if request.user.is_authenticated %}
-          <form method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <input type="submit" value="Logout" />
-          </form>
-        {% else %}
-          {% include "login_form.html" %}
-        {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}">Login</a><br>
+            <a href="{% url 'django_registration_register' %}">Sign up</a>
+          {% endif %}
+       {% endblock %}
+        </div>
+        <div class="col-sm-9">
+          <h1>TWEETSTORM</h1>
 
-     {% endblock %}
-      </div>
-      <div class="col-sm-10 ">
-        <h1>TWEETSTORM</h1>
+          {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
 
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% block content %}{% endblock %}
+          {% block content %}{% endblock %}
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </body>
 </html>

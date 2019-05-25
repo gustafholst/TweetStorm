@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tweets.apps.TweetsConfig',
-    'axes',
+    #'axes',
+    'crispy_forms',
+    'django_registration',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
-    'axes.middleware.AxesMiddleware',
+    #'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'tweetstorm.urls'
@@ -88,7 +90,7 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = [
     # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
-    'axes.backends.AxesBackend',
+    #'axes.backends.AxesBackend',
 
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
@@ -153,3 +155,9 @@ AXES_LOCK_OUT_AT_FAILURE = True
 
 # Clear failed login attempts after an hour
 AXES_COOLOFF_TIME = 1
+
+# Where to redirect user after login/logout
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -1,18 +1,27 @@
+<div class="login_body">
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 <table>
-
 <tr>
-  <td><label for="username"><b>Username</b></label></td>
-  <td><input class="form-control form-control-sm" type="text" placeholder="Enter Username" name="username" required></td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">@</span>
+      <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+    </div>
+  </td>
 </tr>
-
 <tr>
-  <td><label for="password"><b>Password</b></label></td>
-  <td><input class="form-control form-control-sm" type="password" placeholder="Enter Password" name="password" required></td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">?</span>
+      <input type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
+    </div>
+  </td>
+</tr>
+<tr>
+   <td><button type="button" class="btn btn-primary">Login</button>
+   </td>
 </tr>
 </table>
-
-<input class="btn btn-outline-light" type="submit" value="Login" />
-
 </form>
+</div>

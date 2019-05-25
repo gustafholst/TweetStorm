@@ -3,27 +3,70 @@ html {
 }
 
 body {
-    background-color: #004182;
+    background-color: #3f3f3f;
     margin: auto;
     text-align: center;
     color: white;
 }
 
+h1 {
+    color: #00c0c0;
+}
+
+.filter_word {
+    color: #00c0c0;
+    font-style: italic;
+}
+
 form input {
-    background-color: #0059b3;
+    background-color: #4d4d4d;
     border: none;
     border-radius: 6px;
     padding: 5px;
 }
 
 .card {
-    background-color: #0059b3;
-    border-radius: 20px;
+    background-color: #4d4d4d;
+    border-radius: 5px;
+    border-color: #00c0c0;
+}
+
+.login_body {
+    background-color: #3f3f3f;
+    border-radius: 5px;
+    border-color: #00c0c0;
+    width: 300px;
+}
+
+.login_body input {
+    border: none;
+    background-color: #4d4d4d;
+    width: 200px;
+    border-radius: 4px;
+    margin: 10px;
 }
 
 .card input {
     margin: auto;
-    width: 200px;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #00c0c0;
+    font-weight: bold;
+    border: none;
+    width: 80px;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #009999;
+    color: white;
+}
+
+.form-control {
+    background: #3f3f3f;
+    border: none;
 }

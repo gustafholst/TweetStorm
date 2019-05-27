@@ -1,0 +1,14 @@
+.filter .form-control {
+    background-color: #3f3f3f;
+}
+
+.filter_word {
+    color: white;
+    display: block;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.filter_word em {
+    color: #00c0c0;
+}

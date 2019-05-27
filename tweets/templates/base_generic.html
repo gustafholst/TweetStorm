@@ -5,9 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% load static %}
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% load cache_bust %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}?{% cache_bust %}">
+  <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}?{% cache_bust %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?{% cache_bust %}">
   <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>

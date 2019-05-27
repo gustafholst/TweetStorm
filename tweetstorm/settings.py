@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tweets.middleware.HeadersForGreatJustice',
     # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
     #'axes.middleware.AxesMiddleware',
 ]

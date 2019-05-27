@@ -1,9 +1,11 @@
+{% load crispy_forms_tags %}
+
 <div class="new_post">
   <h3>New tweet</h3>
 
   <form action="/tweets/create_post/" method="post">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Tweeeet">
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Tweeeet</button>
   </form>
 </div>

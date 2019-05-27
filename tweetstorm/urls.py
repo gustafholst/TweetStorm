@@ -19,7 +19,7 @@ from django.conf.urls import include
 from django.views.generic import RedirectView
 from django.urls import include
 from django.contrib.auth import views as auth_views
-from tweets.views import index
+from tweets.views import index, CustomLoginView, CustomRegistrationView
 
 # https://docs.djangoproject.com/en/2.2/topics/auth/default/#using-the-views
 # path('accounts/', include('django.contrib.auth.urls')) includes the following:
@@ -35,7 +35,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('tweets.urls')),
     path('accounts/', include('django_registration.backends.one_step.urls')),
-    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
+    path('accounts/', CustomRegistrationView.as_view(), name='django_registration_register'),
+    #path('accounts/login/', auth_views.LoginView.as_view(), name='login'), # custom login view used for ratelimit mixin
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
     #path('accounts/logout/', auth_views.LogoutView.as_view()), # we use our own view for this, as Django's default one lacks CSRF protection
     path('accounts/change-password/', auth_views.PasswordChangeView.as_view(template_name='registration/change_password_form.html', success_url='/accounts/change-password/done/'), name='change_password'),
     path('accounts/change-password/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/change_password_done.html'), name='change_password_done'),

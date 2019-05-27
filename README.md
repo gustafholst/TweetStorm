@@ -23,10 +23,3 @@ Run development server:
 python3 manage.py runserver
 ```
 
-## Misc.
-
-Clear lockouts/access records:
-
-```
-python3 manage.py axes_reset
-```

@@ -10,7 +10,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
-#from axes.models import AccessLog
+from django.contrib.auth.views import LoginView
+
+from django_registration.backends.one_step.views import RegistrationView
+from ratelimit.decorators import ratelimit
+from ratelimit.mixins import RatelimitMixin
 
 def index(request):
     """View function for home page of site."""
@@ -26,6 +30,7 @@ def index(request):
 
 @login_required
 @require_http_methods(["POST"])
+@ratelimit(key='user', rate='5/m', block=True)
 def create_post(request):
     filled_out_form = CreatePostForm(request.POST)
     if filled_out_form.is_valid():
@@ -101,3 +106,21 @@ def vote_down(request):
 def safe_logout(request):
     logout(request)
     return HttpResponseRedirect("/")
+
+def username_and_ip(group, request):
+    return f"{request.POST.get('username')}:{request.META['REMOTE_ADDR']}"
+
+class CustomLoginView(RatelimitMixin, LoginView):
+    ratelimit_key = username_and_ip
+    ratelimit_rate = '5/h'
+    ratelimit_block = True
+    ratelimit_method = 'POST'
+
+class CustomRegistrationView(RatelimitMixin, RegistrationView):
+    ratelimit_key = 'ip'
+    ratelimit_rate = '5/h'
+    ratelimit_block = True
+    ratelimit_method = 'POST'
+
+def rate_limited(request, exception):
+    return render(request, 'rate_limited.html', {'error': 'Too much, too soon. You\'ve been throttled.'})

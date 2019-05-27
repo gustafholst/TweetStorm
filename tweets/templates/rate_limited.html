@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Rate limited{% endblock %}
+
+{% block content %}
+  <p>Håll i hästarna!</p>
+
+{% if error %}
+  <p>{{ error }}</p>
+{% endif %}
+{% endblock %}

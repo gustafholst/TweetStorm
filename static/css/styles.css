@@ -31,9 +31,7 @@ form input {
 
 .login_body {
     background-color: #3f3f3f;
-    border-radius: 5px;
     border-color: #00c0c0;
-    width: 300px;
 }
 
 .login_body input {

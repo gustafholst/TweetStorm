@@ -1,24 +1,20 @@
 <div class="tweet">
   <div class='card'>
       <div class="card-body">
-        <div class="row"">
+        <div class="row">
           <div class="col-md-10">
             <form>
               {% csrf_token %}
-              <input type="hidden" name="post_id" value="{{post.id}}">
-              <div class="col-md-10"><b>{{ post.author }} | {{ post.date_posted }} |
-                <i class="fas fa-thumbs-up vote" value="1"></i><span class="up_count"> {{ post.num_up_votes }} </span>
-                | <i class="fas fa-thumbs-down vote" value="-1"></i><span class="down_count"> {{ post.num_down_votes }} </span> </b></div>
+              <input type="hidden" name="post_id" value="{{post.id}}" />
+              <strong><a href="{% url 'user_profile' post.author %}">{{ post.author }}</a></strong> | <a href="{% url 'post_page' post.pk %}"><time title="{{ post.date_posted }}" datetime="{{ post.date_posted|date:"c" }}">{{ post.date_posted|timesince }} ago</time></a> |
+                <i class="fas fa-thumbs-up vote" value="1"></i><span class="up_count">{{ post.num_up_votes }} </span>
+                | <i class="fas fa-thumbs-down vote" value="-1"></i><span class="down_count">{{ post.num_down_votes }} </span>
             </form>
           </div>
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
               {% if post.author == user %}
                 <div class="col-md-2 text-right">
-                  <form action="{% url 'tweets-delete_post' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="post_id" value="{{post.id}}">
-                    <button type="submit" class="btn text-danger"><i class="fa fa-window-close"></i></button>
-                  </form>
+                    <a href="{% url 'delete-post' post.id %}"><i class="fa fa-window-close text-danger"></i></a>
                 </div>
               {% endif %}
             {% endif %}

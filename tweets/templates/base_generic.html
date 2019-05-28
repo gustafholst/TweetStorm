@@ -12,12 +12,12 @@
   <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/script' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
 </head>
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">TWEETSTORM</a>
+    <a class="navbar-brand" href="/">TWEETSTORM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,19 +28,22 @@
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
 
-        {% if user.is_authenticated %}
+        {% if request.user.is_authenticated %}
 
           <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ user.username }}
+            {{ request.user.username }}
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'change_password' %}">Change password</a>    
+            <a class="dropdown-item" href="{% url 'user_profile' request.user.username %}">Profile</a>
+            <a class="dropdown-item" href="{% url 'change_password' %}">Change password</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item"href="#">Log out</a>
+            <form method="post" action="{% url 'safe_logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link dropdown-item">Log out</button>
+            </form>
           </div>
         </li>
-        
 
         {% else %}
           <li class="nav-item">
@@ -55,9 +58,8 @@
       </ul>
 
 
-      <form class="form-inline my-2 my-lg-2">
-        {% csrf_token %}
-        <input class="form-control mr-sm-2" type="search" placeholder="user:<user> | word:<word>" aria-label="Search">
+      <form class="form-inline my-2 my-lg-2" method="get" action="{% url 'tweets-filter_posts' %}">
+        <input class="form-control mr-sm-2" name="query" type="search" placeholder="user:<user> <words>" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>

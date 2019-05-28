@@ -11,4 +11,10 @@
   {% for post in posts %}
     {% include "post.html" %}
   {% endfor %}
+
+  {% if is_paginated %}
+
+  {% include "_pagination.html" %}
+
+  {% endif %}
 {% endblock %}

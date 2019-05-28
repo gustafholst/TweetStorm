@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{user}}{% endblock %}
+
+{% block content %}
+
+<h3>Tweets by {{ user }}</h3>
+
+{% if post_list %}
+  {% for post in post_list %}
+    {% include "post.html" %}
+  {% endfor %}
+{% else %}
+  {{user}} hasn't tweeted yet!
+{% endif %}
+
+{% if is_paginated %}
+
+{% include "_pagination.html" %}
+
+{% endif %}
+
+{% endblock %}

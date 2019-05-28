@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{user}}{% endblock %}
+
+{% block content %}
+
+<h3>Confirm deletion</h3>
+
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm">
+</form>
+
+{% endblock %}

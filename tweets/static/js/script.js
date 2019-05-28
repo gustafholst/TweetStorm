@@ -23,8 +23,8 @@ $(document).ready(function(){
 
             post_id = json['post_id'];
 
-            $("input[value=" + post_id + "]").siblings('div').find('.up_count').text(json['num_up_votes']);
-            $("input[value=" + post_id + "]").siblings('div').find('.down_count').text(json['num_down_votes']);
+            $("input[value=" + post_id + "]").siblings('.up_count').text(json['num_up_votes']);
+            $("input[value=" + post_id + "]").siblings('.down_count').text(json['num_down_votes']);
 
             console.log(json);
 

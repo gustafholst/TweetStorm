@@ -35,3 +35,6 @@ class Vote(models.Model):
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     vote = models.SmallIntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])
+
+    class Meta:
+        unique_together = ('voter', 'post',)

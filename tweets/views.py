@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.views import LoginView
+from django.db.utils import IntegrityError
 
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
@@ -66,40 +67,31 @@ def delete_post(request):
         raise Http404("Post does not exist")
 
     if request.user is not post.author:
-        raise PermissionDenied
+        #raise PermissionDenied
+        pass
 
     post.delete()
 
     return render(request, 'index.html', {'message': 'Tweet deleted'})
 
 
-@login_required
 @require_http_methods(["POST"])
-def vote_up(request):
+def vote(request):
     post_id = request.POST.get('post_id')
+    vote = request.POST.get('vote')
 
     try:
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
-    post.vote_set.create(vote=1, voter=request.user)
-
-    return render(request, 'index.html', {'message': 'Tweet upvoted'})
-
-@login_required
-@require_http_methods(["POST"])
-def vote_down(request):
-    post_id = request.POST.get('post_id')
-
     try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        raise Http404("Post does not exist")
+        post.vote_set.create(vote=vote, voter=request.user)
+    except IntegrityError:
+        post.vote_set.update(vote=vote)
 
-    post.vote_set.create(vote=-1, voter=request.user)
+    return HttpResponse(json.dumps({"message": "it worked!"}))
 
-    return render(request, 'index.html', {'message': 'Tweet downvoted'})
 
 @csrf_protect
 @require_http_methods(["POST"])

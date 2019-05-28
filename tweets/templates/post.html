@@ -6,11 +6,7 @@
             {% if request.user.is_authenticated %}
               {% if post.author == user %}
                 <div class="col-md-2 text-right">
-                  <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="post_id" value="{{post.id}}">
-                    <button type="submit" class="btn text-danger"><i class="fa fa-window-close"></i></button>
-                  </form>
+                    <a href="{% url 'delete-post' post.id %}"><i class="fa fa-window-close text-danger"></i></a>
                 </div>
               {% endif %}
             {% endif %}

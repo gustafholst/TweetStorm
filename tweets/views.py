@@ -10,14 +10,18 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
+from django.urls import reverse_lazy
+
 from django.contrib.auth.views import LoginView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormMixin
+from django.views.generic import DeleteView
 
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
+from django.utils.decorators import method_decorator
 
 import re
 
@@ -72,23 +76,16 @@ class FilterView(ListView):
         context['query'] = self.request.GET['query'] if 'query' in self.request.GET else ''
         return context
 
-@login_required
-@require_http_methods(["POST"])
-def delete_post(request):
-    post_id = request.POST.get('post_id')
+@method_decorator(login_required, name='dispatch')
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = reverse_lazy('index')
 
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        raise Http404("Post does not exist")
-
-    if request.user is not post.author:
-        raise PermissionDenied
-
-    post.delete()
-
-    return render(request, 'index.html', {'message': 'Tweet deleted'})
-
+    def get_object(self, queryset=None):
+        post = super(PostDeleteView, self).get_object()
+        if not post.author == self.request.user:
+            raise PermissionDenied
+        return post
 
 @login_required
 @require_http_methods(["POST"])

@@ -4,7 +4,7 @@ from .forms import CreatePostForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -16,6 +16,8 @@ from django.db.utils import IntegrityError
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
+
+import json
 
 def index(request):
     """View function for home page of site."""
@@ -66,19 +68,21 @@ def delete_post(request):
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
-    if request.user is not post.author:
-        #raise PermissionDenied
-        pass
+    if request.user == post.author:
+        post.delete()
+        messages.add_message(request, messages.INFO, 'Tweet was deleted')
+    else:
+        messages.add_message(request, messages.WARNING, 'You are not authorized to delete this tweet')
 
-    post.delete()
-
-    return render(request, 'index.html', {'message': 'Tweet deleted'})
+    return HttpResponseRedirect("/")
 
 
 @require_http_methods(["POST"])
 def vote(request):
     post_id = request.POST.get('post_id')
     vote = request.POST.get('vote')
+
+    response = {}
 
     try:
         post = Post.objects.get(id=post_id)
@@ -87,11 +91,17 @@ def vote(request):
 
     try:
         post.vote_set.create(vote=vote, voter=request.user)
+        response['message'] = "Tweet upvoted"
     except IntegrityError:
-        post.vote_set.update(vote=vote)
+        post.vote_set.filter(voter=request.user).update(vote=vote)
+        response['message'] = "Vote updated"
 
-    return HttpResponse(json.dumps({"message": "it worked!"}))
+    response['post_id'] = post.id
+    response['num_up_votes'] = post.num_up_votes
+    response['num_down_votes'] = post.num_down_votes
 
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
 
 @csrf_protect
 @require_http_methods(["POST"])

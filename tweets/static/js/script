@@ -2,11 +2,16 @@
 $(document).ready(function(){
   $('.vote').click(function() {
 
-    let post_id = $(this).parents('.row').attr('id');
+    let post_id = $(this).parents('form').children('input[name=post_id]').val();
+    let csrf = $(this).parents('form').children('input[name=csrfmiddlewaretoken]').val();
+    let vote = $(this).hasClass('fa-thumbs-up') ? 1 : -1
+
+    console.log(vote);
 
     data = {
       "post_id": post_id,
-      "vote": 1,
+      "vote": vote,
+      'csrfmiddlewaretoken': csrf
     }
 
     $.ajax({
@@ -15,6 +20,12 @@ $(document).ready(function(){
          data: data,
          dataType: "json",
          success: function(json) {
+
+            post_id = json['post_id'];
+
+            $("input[value=" + post_id + "]").siblings('div').find('.up_count').text(json['num_up_votes']);
+            $("input[value=" + post_id + "]").siblings('div').find('.down_count').text(json['num_down_votes']);
+
             console.log(json);
 
           },

@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Vote
-from .forms import CreatePostForm, LoginForm
+from .forms import CreatePostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -11,22 +11,24 @@ from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.views import LoginView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormMixin
 
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
 
-def index(request):
-    """View function for home page of site."""
+class IndexView(FormMixin, ListView):
+    model = Post
+    paginate_by = 10
+    template_name ='index.html'
+    form_class = CreatePostForm
+    context_object_name = 'posts'
 
-    all_posts = Post.objects.all()
-
-    context = {
-        'form': CreatePostForm(),
-        'posts': all_posts
-    }
-
-    return render(request, 'index.html', context=context)
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            return context
 
 @login_required
 @require_http_methods(["POST"])
@@ -124,3 +126,21 @@ class CustomRegistrationView(RatelimitMixin, RegistrationView):
 
 def rate_limited(request, exception):
     return render(request, 'rate_limited.html', {'error': 'Too much, too soon. You\'ve been throttled.'})
+
+class ProfileView(ListView):
+    model = Post
+    paginate_by = 10
+    template_name ='user_profile.html'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        user=get_object_or_404(User, username=username)
+        return Post.objects.filter(author=user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context['user'] = get_object_or_404(User, username=self.kwargs['username'])
+        return context
+
+class PostView(DetailView):
+    model = Post

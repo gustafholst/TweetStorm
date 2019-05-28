@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Vote
-from .forms import CreatePostForm, LoginForm
+from .forms import CreatePostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -11,22 +11,26 @@ from django.contrib.auth.models import User
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.views import LoginView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormMixin
 
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
 
-def index(request):
-    """View function for home page of site."""
+import re
 
-    all_posts = Post.objects.all()
+class IndexView(FormMixin, ListView):
+    model = Post
+    paginate_by = 10
+    template_name ='index.html'
+    form_class = CreatePostForm
+    context_object_name = 'posts'
 
-    context = {
-        'form': CreatePostForm(),
-        'posts': all_posts
-    }
-
-    return render(request, 'index.html', context=context)
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            return context
 
 @login_required
 @require_http_methods(["POST"])
@@ -42,18 +46,31 @@ def create_post(request):
 
     return HttpResponseRedirect("/")
 
+class FilterView(ListView):
+    model = Post
+    paginate_by = 10
+    context_object_name = 'posts'
+    template_name ='filtered.html'
 
-def filter_posts(request):
-    filtered_posts = Post.objects.none()
+    def get_queryset(self):
+        filtered_posts = Post.objects.none()
+        query = self.request.GET['query'] if 'query' in self.request.GET else ''
 
-    if request.GET.get('user'):
-        filtered_posts = Post.objects.filter(author__username=request.GET['user'])
+        if query:
+            matches = re.search('(user:(?P<user>\w+))?\s?(?P<words>.*)?', query)
+            if matches.group('user'):
+                filtered_posts = Post.objects.filter(author__username=matches.group('user'))
+                if matches.group('words'):
+                    filtered_posts = filtered_posts.filter(text__icontains=matches.group('words'))
+            elif matches.group('words'):
+                filtered_posts = Post.objects.filter(text__icontains=matches.group('words'))
 
-    if request.GET.get('word'):
-        filtered_posts = Post.objects.filter(text__icontains=request.GET['word'])
+        return filtered_posts
 
-    return render(request, 'index.html', {'posts': filtered_posts })
-
+    def get_context_data(self, **kwargs):
+        context = super(FilterView, self).get_context_data(**kwargs)
+        context['query'] = self.request.GET['query'] if 'query' in self.request.GET else ''
+        return context
 
 @login_required
 @require_http_methods(["POST"])
@@ -124,3 +141,21 @@ class CustomRegistrationView(RatelimitMixin, RegistrationView):
 
 def rate_limited(request, exception):
     return render(request, 'rate_limited.html', {'error': 'Too much, too soon. You\'ve been throttled.'})
+
+class ProfileView(ListView):
+    model = Post
+    paginate_by = 10
+    template_name ='user_profile.html'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        user = get_object_or_404(User, username=username)
+        return Post.objects.filter(author=user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context['user'] = get_object_or_404(User, username=self.kwargs['username'])
+        return context
+
+class PostView(DetailView):
+    model = Post

@@ -2,8 +2,8 @@
   <div class='card'>
       <div class="card-body">
         <div class="row">
-            <div class="col-md-10"><b>{{ post.author }} | {{ post.date_posted }} | {{ post.num_up_votes }} | {{ post.num_down_votes }} </b></div>
-            {% if user.is_authenticated %}
+          <div class="col-md-10"><strong><a href="{% url 'user_profile' post.author %}">{{ post.author }}</a></strong> | <a href="{% url 'post_page' post.pk %}"><time title="{{ post.date_posted }}" datetime="{{ post.date_posted|date:"c" }}">{{ post.date_posted|timesince }} ago</time></a> | {{ post.num_up_votes }} | {{ post.num_down_votes }}</div>
+            {% if request.user.is_authenticated %}
               {% if post.author == user %}
                 <div class="col-md-2 text-right">
                   <form action="" method="POST">

@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Search results{% endblock %}
+
+{% block content %}
+
+  {% if query %}
+    <h3>Search results for: {{ query }}</h3>
+
+    {% if posts %}
+      {% for post in posts %}
+        {% include "post.html" %}
+      {% endfor %}
+    {% else %}
+      <p>No posts matched your query.</p>
+    {% endif %}
+  {% else %}
+    <h3>No search term specified.</h3>
+  {% endif %}
+
+  {% if is_paginated %}
+
+  {% include "_pagination.html" %}
+
+  {% endif %}
+{% endblock %}

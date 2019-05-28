@@ -8,7 +8,7 @@ class HeadersForGreatJustice:
         # whitelists self (a source with the same scheme/host/port combination,
         # with "same" being same as where this policy is defined), as the only allowed
         # source that resources can be loaded from
-        response['Content-Security-Policy'] = "default-src: 'self'"
+        response['Content-Security-Policy'] = "default-src 'self'"
         # Don't leak referrer information
         response['Referrer-Policy'] = "no-referrer"
 

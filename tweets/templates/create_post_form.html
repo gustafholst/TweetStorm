@@ -1,8 +1,6 @@
 {% load crispy_forms_tags %}
 
 <div class="new_post">
-  <h3>New tweet</h3>
-
   <form action="/tweets/create_post/" method="post">
     {% csrf_token %}
     {{ form|crispy }}

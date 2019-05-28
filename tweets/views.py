@@ -4,7 +4,7 @@ from .forms import CreatePostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse_lazy
 
 from django.contrib.auth.views import LoginView
+from django.db.utils import IntegrityError
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormMixin
@@ -23,6 +24,7 @@ from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
 from django.utils.decorators import method_decorator
 
+import json
 import re
 
 class IndexView(FormMixin, ListView):
@@ -87,33 +89,31 @@ class PostDeleteView(DeleteView):
             raise PermissionDenied
         return post
 
-@login_required
 @require_http_methods(["POST"])
-def vote_up(request):
+def vote(request):
     post_id = request.POST.get('post_id')
+    vote = request.POST.get('vote')
+
+    response = {}
 
     try:
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404("Post does not exist")
 
-    post.vote_set.create(vote=1, voter=request.user)
-
-    return render(request, 'index.html', {'message': 'Tweet upvoted'})
-
-@login_required
-@require_http_methods(["POST"])
-def vote_down(request):
-    post_id = request.POST.get('post_id')
-
     try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        raise Http404("Post does not exist")
+        post.vote_set.create(vote=vote, voter=request.user)
+        response['message'] = "Tweet upvoted"
+    except IntegrityError:
+        post.vote_set.filter(voter=request.user).update(vote=vote)
+        response['message'] = "Vote updated"
 
-    post.vote_set.create(vote=-1, voter=request.user)
+    response['post_id'] = post.id
+    response['num_up_votes'] = post.num_up_votes
+    response['num_down_votes'] = post.num_down_votes
 
-    return render(request, 'index.html', {'message': 'Tweet downvoted'})
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
 
 @csrf_protect
 @require_http_methods(["POST"])

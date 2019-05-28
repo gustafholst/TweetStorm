@@ -4,8 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('create_post/', views.create_post, name='tweets-create_post'),
-    path('voteup/', views.vote_up, name="tweets-vote_up"),
-    path('votedown/', views.vote_down, name="tweets-vote_down"),
+    path('vote/', views.vote, name="tweets-vote"),
     path('filter_posts/', views.FilterView.as_view(), name="tweets-filter_posts"),
     path('logout/', views.safe_logout, name="safe_logout"),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name="delete-post"),

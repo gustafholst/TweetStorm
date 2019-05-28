@@ -19,6 +19,8 @@ from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
 
+import re
+
 class IndexView(FormMixin, ListView):
     model = Post
     paginate_by = 10
@@ -44,18 +46,31 @@ def create_post(request):
 
     return HttpResponseRedirect("/")
 
+class FilterView(ListView):
+    model = Post
+    paginate_by = 10
+    context_object_name = 'posts'
+    template_name ='filtered.html'
 
-def filter_posts(request):
-    filtered_posts = Post.objects.none()
+    def get_queryset(self):
+        filtered_posts = Post.objects.none()
+        query = self.request.GET['query'] if 'query' in self.request.GET else ''
 
-    if request.GET.get('user'):
-        filtered_posts = Post.objects.filter(author__username=request.GET['user'])
+        if query:
+            matches = re.search('(user:(?P<user>\w+))?\s?(?P<words>.*)?', query)
+            if matches.group('user'):
+                filtered_posts = Post.objects.filter(author__username=matches.group('user'))
+                if matches.group('words'):
+                    filtered_posts = filtered_posts.filter(text__icontains=matches.group('words'))
+            elif matches.group('words'):
+                filtered_posts = Post.objects.filter(text__icontains=matches.group('words'))
 
-    if request.GET.get('word'):
-        filtered_posts = Post.objects.filter(text__icontains=request.GET['word'])
+        return filtered_posts
 
-    return render(request, 'index.html', {'posts': filtered_posts })
-
+    def get_context_data(self, **kwargs):
+        context = super(FilterView, self).get_context_data(**kwargs)
+        context['query'] = self.request.GET['query'] if 'query' in self.request.GET else ''
+        return context
 
 @login_required
 @require_http_methods(["POST"])
@@ -134,7 +149,7 @@ class ProfileView(ListView):
 
     def get_queryset(self):
         username = self.kwargs['username']
-        user=get_object_or_404(User, username=username)
+        user = get_object_or_404(User, username=username)
         return Post.objects.filter(author=user)
 
     def get_context_data(self, **kwargs):

@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'tweets.apps.TweetsConfig',
     'crispy_forms',
     'django_registration',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tweets.middleware.HeadersForGreatJustice',
@@ -136,8 +141,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/static')
 STATIC_URL = '/static/'
 
 # Where to redirect user after login/logout
+#
+#LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = 'two_factor:login'
+# this one is optional
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

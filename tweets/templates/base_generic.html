@@ -37,6 +37,7 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'user_profile' request.user.username %}">Profile</a>
             <a class="dropdown-item" href="{% url 'change_password' %}">Change password</a>
+            <a class="dropdown-item" href="{% url 'two_factor:profile' %}">Account security</a>
             <div class="dropdown-divider"></div>
             <form method="post" action="{% url 'safe_logout' %}">
             {% csrf_token %}
@@ -47,7 +48,7 @@
 
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-link" href="{% url 'two_factor:login' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'django_registration_register' %}">Sign up</a>
@@ -59,7 +60,7 @@
 
 
       <form class="form-inline my-2 my-lg-2" method="get" action="{% url 'tweets-filter_posts' %}">
-        <input class="form-control mr-sm-2" name="query" type="search" placeholder="user:<user> <words>" aria-label="Search">
+        <input class="form-control mr-sm-2" name="query" type="search" placeholder="user:<user> and/or <words>" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>

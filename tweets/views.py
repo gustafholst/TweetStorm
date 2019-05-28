@@ -89,6 +89,7 @@ class PostDeleteView(DeleteView):
             raise PermissionDenied
         return post
 
+@login_required
 @require_http_methods(["POST"])
 def vote(request):
     post_id = request.POST.get('post_id')

@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-  $('.vote').click(function() {
+  $('form.cansubmit .vote').click(function() {
 
     let post_id = $(this).parents('form').children('input[name=post_id]').val();
     let csrf = $(this).parents('form').children('input[name=csrfmiddlewaretoken]').val();

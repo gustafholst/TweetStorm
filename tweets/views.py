@@ -104,7 +104,7 @@ def vote(request):
 
     try:
         post.vote_set.create(vote=vote, voter=request.user)
-        response['message'] = "Tweet upvoted"
+        response['message'] = "Tweet voted"
     except IntegrityError:
         post.vote_set.filter(voter=request.user).update(vote=vote)
         response['message'] = "Vote updated"

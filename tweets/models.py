@@ -2,14 +2,14 @@ from django.db import models
 
 from datetime import date
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator
 
 
 class Post(models.Model):
     """
     Post model
     """
-    text = models.TextField(max_length=2000)
+    text = models.CharField(max_length=280)
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
 

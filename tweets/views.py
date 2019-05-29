@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.timesince import timesince
@@ -16,7 +16,7 @@ from django.contrib.auth.views import LoginView
 from django.db.utils import IntegrityError
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, CreateView
 from django.views.generic import DeleteView
 
 from django_registration.backends.one_step.views import RegistrationView
@@ -45,8 +45,13 @@ def create_post(request):
     filled_out_form = CreatePostForm(request.POST)
     if filled_out_form.is_valid():
         post_text = filled_out_form.cleaned_data['post_text']
-        post = Post.objects.create(text=post_text, author=request.user)
-        messages.add_message(request, messages.INFO, 'Tweet successfully tweeted!')
+        post = Post(text=post_text, author=request.user)
+        try:
+            post.full_clean()
+            post.save()
+            messages.add_message(request, messages.INFO, 'Tweet successfully tweeted!')
+        except ValidationError as e:
+            messages.add_message(request, messages.WARNING, 'Form data invalid.')
     else:
         messages.add_message(request, messages.WARNING, 'Form data invalid.')
 

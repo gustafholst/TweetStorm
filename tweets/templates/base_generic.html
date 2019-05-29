@@ -74,7 +74,7 @@
 
           {% if messages %}
               {% for message in messages %}
-              <div class="alert alert-primary {% if message.tags %} class="{{ message.tags }}"{% endif %}" role="alert">
+              <div class="alert alert-primary {% if message.tags %}alert-{{ message.tags }}"{% endif %}" role="alert">
               {{ message }}
               </div>
               {% endfor %}

@@ -7,7 +7,9 @@
           <div class="col-md-10">
             <form class="{% if request.user.is_authenticated %}cansubmit{% endif %}">
               {% csrf_token %}
-              {% get_vote post request.user as user_vote %}
+              {% if request.user.is_authenticated %}
+                {% get_vote post request.user as user_vote %}
+              {% endif %}
               <input type="hidden" name="post_id" value="{{post.id}}" />
               <strong><a href="{% url 'user_profile' post.author %}">{{ post.author }}</a></strong> &nbsp; <a href="{% url 'post_page' post.pk %}"><time title="{{ post.date_posted }}" datetime="{{ post.date_posted|date:"c" }}">{{ post.date_posted|timesince }} ago</time></a> &nbsp;
                 <i class="fas fa-thumbs-up vote mr-2 {% if user_vote == 1 %} text-success {% endif %}"></i><span class="up_count">{{ post.num_up_votes }} </span>

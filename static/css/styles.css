@@ -12,3 +12,36 @@
 .filter_word em {
     color: #00c0c0;
 }
+
+.hidden-2fa {
+  margin-left: -9999px;
+}
+
+/* Because django-formtools which django-two-factor-auth uses
+   makes theming of the login form(s) difficult */
+.form-2fa input[type='text'],
+.form-2fa input[type='password'],
+.form-2fa input[type='number'] {
+  background-clip: padding-box;
+  background-color: #4d4d4d;
+  border: 1px solid #353535;
+  border-radius: .25rem;
+  color: #e9ecef;
+  font-size. .9375rem;
+  font-weight: 400;
+  height: calc(1.5em + 1.5rem + 2px);
+  line-height: 1.5;
+  padding: .75rem 1rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.form-2fa input[type='text']::placeholder,
+.form-2fa input[type='password']::placeholder,
+.form-2fa input[type='number']::placeholder {
+  color: #7a8288;
+  opacity: 1;
+}
+
+.tweet form.cansubmit .vote {
+  cursor: pointer;
+}

@@ -6,6 +6,9 @@ $(document).ready(function(){
     let csrf = $(this).parents('form').children('input[name=csrfmiddlewaretoken]').val();
     let vote = $(this).hasClass('fa-thumbs-up') ? 1 : -1
 
+    // reset vote
+    $(this).parent().find('i').removeClass('text-success text-danger');
+
     data = {
       "post_id": post_id,
       "vote": vote,
@@ -19,15 +22,19 @@ $(document).ready(function(){
          dataType: "json",
          success: function(json) {
 
-            post_id = json['post_id'];
+            let post_id = json['post_id'];
+            let vote = json['vote'];
 
-            $("input[value=" + post_id + "]").siblings('.up_count').text(json['num_up_votes']);
-            $("input[value=" + post_id + "]").siblings('.down_count').text(json['num_down_votes']);
+            input_element = $("input[value=" + post_id + "]");
+            input_element.siblings('.up_count').text(json['num_up_votes']);
+            input_element.siblings('.down_count').text(json['num_down_votes']);
 
+            if (vote == 1)
+              input_element.siblings('.fa-thumbs-up').addClass('text-success')
+
+            if (vote == -1)
+              input_element.siblings('.fa-thumbs-down').addClass('text-danger')
           },
-          error: function(rs, e) {
-              //  alert(rs.responseText);
-          }
     });
 
   });

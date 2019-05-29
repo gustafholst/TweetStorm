@@ -93,7 +93,7 @@ class PostDeleteView(DeleteView):
 @require_http_methods(["POST"])
 def vote(request):
     post_id = request.POST.get('post_id')
-    vote = request.POST.get('vote')
+    vote = int(request.POST.get('vote'))
 
     response = {}
 
@@ -104,11 +104,15 @@ def vote(request):
 
     try:
         post.vote_set.create(vote=vote, voter=request.user)
-        response['message'] = "Tweet voted"
     except IntegrityError:
-        post.vote_set.filter(voter=request.user).update(vote=vote)
-        response['message'] = "Vote updated"
+        old_vote = post.vote_set.get(voter=request.user).vote
+        if (old_vote == vote):
+            post.vote_set.filter(voter=request.user).delete()
+            vote = 0
+        else:
+            post.vote_set.filter(voter=request.user).update(vote=vote)
 
+    response['vote'] = vote
     response['post_id'] = post.id
     response['num_up_votes'] = post.num_up_votes
     response['num_down_votes'] = post.num_down_votes

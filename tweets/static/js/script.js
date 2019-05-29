@@ -16,7 +16,7 @@ $(document).ready(function(){
 
     $.ajax({
          type: "POST",
-         url: "tweets/vote/",
+         url: "/tweets/vote/",
          data: data,
          dataType: "json",
          success: function(json) {

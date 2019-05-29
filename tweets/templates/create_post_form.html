@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
-<div class="new_post">
+<div class="new_post mb-4">
   <form action="/tweets/create_post/" method="post">
     {% csrf_token %}
     {{ form|crispy }}

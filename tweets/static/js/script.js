@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
   $('form.cansubmit .vote').click(function() {
 
@@ -29,11 +28,12 @@ $(document).ready(function(){
             input_element.siblings('.up_count').text(json['num_up_votes']);
             input_element.siblings('.down_count').text(json['num_down_votes']);
 
+            //mark new vote
             if (vote == 1)
-              input_element.siblings('.fa-thumbs-up').addClass('text-success')
+              input_element.siblings('.fa-thumbs-up').addClass('text-success');
 
             if (vote == -1)
-              input_element.siblings('.fa-thumbs-down').addClass('text-danger')
+              input_element.siblings('.fa-thumbs-down').addClass('text-danger');
           },
     });
 

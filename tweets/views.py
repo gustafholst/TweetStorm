@@ -82,12 +82,17 @@ class FilterView(ListView):
 class PostDeleteView(DeleteView):
     model = Post
     success_url = reverse_lazy('index')
+    success_message = "Tweet deleted."
 
     def get_object(self, queryset=None):
         post = super(PostDeleteView, self).get_object()
         if not post.author == self.request.user:
             raise PermissionDenied
         return post
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(PostDeleteView, self).delete(request, *args, **kwargs)
 
 @login_required
 @require_http_methods(["POST"])

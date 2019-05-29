@@ -73,11 +73,11 @@
         <div class="col-sm-12">
 
           {% if messages %}
-          <ul class="messages">
               {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              <div class="alert alert-primary {% if message.tags %} class="{{ message.tags }}"{% endif %}" role="alert">
+              {{ message }}
+              </div>
               {% endfor %}
-          </ul>
           {% endif %}
           {% block content %}{% endblock %}
         </div>

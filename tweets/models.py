@@ -1,8 +1,7 @@
+"""App models."""
 from django.db import models
-
-from datetime import date
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Post(models.Model):
@@ -15,11 +14,12 @@ class Post(models.Model):
 
     @property
     def num_up_votes(self):
-        # smoother way to do this?
+        """Get number of upvotes."""
         return Vote.objects.filter(post=self).filter(vote=1).count()
 
     @property
     def num_down_votes(self):
+        """Get number of downvotes."""
         return Vote.objects.filter(post=self).filter(vote=-1).count()
 
     class Meta:
@@ -28,13 +28,19 @@ class Post(models.Model):
     def __str__(self):
         return self.text
 
+
 class Vote(models.Model):
     """
     Vote model
     """
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    vote = models.SmallIntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])
+    vote = models.SmallIntegerField(default=0,
+                                    validators=[MinValueValidator(-1),
+                                                MaxValueValidator(1)])
 
     class Meta:
         unique_together = ('voter', 'post',)
+
+    def __str__(self):
+        return f"User {self.voter} voted {self.vote} on tweet {self.post}"

@@ -36,6 +36,7 @@ from django_registration.forms import RegistrationFormUniqueEmail
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('tweets.urls')),
+    path('account/login/', CustomLoginView.as_view(), name='login'),
     path('account/', include('django_registration.backends.one_step.urls')),
     path('account/', CustomRegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='django_registration_register'),
     #path('accounts/login/', auth_views.LoginView.as_view(), name='login'), # custom login view used for ratelimit mixin

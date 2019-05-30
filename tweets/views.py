@@ -25,7 +25,7 @@ from ratelimit.mixins import RatelimitMixin
 from django.utils.decorators import method_decorator
 
 from useraudit.models import LoginLog, FailedLoginLog
-from two_factor.views import ProfileView as TwoFactorProfileView
+from two_factor.views import ProfileView as TwoFactorProfileView, LoginView as TwoFactorLoginView
 
 import json
 import re
@@ -146,7 +146,7 @@ def safe_logout(request):
 def username_and_ip(group, request):
     return f"{request.POST.get('username')}:{request.META['REMOTE_ADDR']}"
 
-class CustomLoginView(RatelimitMixin, LoginView):
+class CustomLoginView(RatelimitMixin, TwoFactorLoginView):
     ratelimit_key = username_and_ip
     ratelimit_rate = '5/h'
     ratelimit_block = True

@@ -1,6 +1,6 @@
 
 <nav aria-label="Tweet navigation">
-  <ul class="pagination">
+  <ul class="pagination mt-3">
     {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page={{ page_obj.previous_page_number }}&query={{ query }}" aria-label="Previous">

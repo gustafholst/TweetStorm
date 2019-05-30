@@ -4,10 +4,14 @@ from .forms import CreatePostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.cache import never_cache
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.tokens import default_token_generator
 from django.utils.timesince import timesince
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse_lazy
@@ -16,8 +20,9 @@ from django.contrib.auth.views import LoginView
 from django.db.utils import IntegrityError
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormMixin, CreateView
+from django.views.generic.edit import FormMixin, CreateView, FormView
 from django.views.generic import DeleteView
+from django.views.generic.base import TemplateView
 
 from django_registration.backends.one_step.views import RegistrationView
 from ratelimit.decorators import ratelimit

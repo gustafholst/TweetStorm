@@ -48,6 +48,9 @@
     {% endif %}
 
     {% include "two_factor/_wizard_actions.html" %}
+
   </form>
+
+  <p class="text-right small"><a href="{% url 'reset_password'%}">I have forgotten my password</a></p>
 
 {% endblock %}

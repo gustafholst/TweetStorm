@@ -1,9 +1,9 @@
 $(document).ready(function(){
   $('form.cansubmit .vote').click(function() {
 
-    let post_id = $(this).parents('form').children('input[name=post_id]').val();
-    let csrf = $(this).parents('form').children('input[name=csrfmiddlewaretoken]').val();
-    let vote = $(this).hasClass('fa-thumbs-up') ? 1 : -1
+    const post_id = $(this).parents('form').children('input[name=post_id]').val();
+    const csrf = $(this).parents('form').children('input[name=csrfmiddlewaretoken]').val();
+    const vote = $(this).hasClass('fa-thumbs-up') ? 1 : -1
 
     // reset vote
     $(this).parent().find('i').removeClass('text-success text-danger');
@@ -21,10 +21,12 @@ $(document).ready(function(){
          dataType: "json",
          success: function(json) {
 
-            let post_id = json['post_id'];
-            let vote = json['vote'];
+            const post_id = json['post_id'];
+            const vote = json['vote'];
 
-            input_element = $("input[value=" + post_id + "]");
+            const input_element = $("input[value=" + post_id + "]");
+
+            // set new vote counts
             input_element.siblings('.up_count').text(json['num_up_votes']);
             input_element.siblings('.down_count').text(json['num_down_votes']);
 
@@ -36,7 +38,5 @@ $(document).ready(function(){
               input_element.siblings('.fa-thumbs-down').addClass('text-danger');
           },
     });
-
   });
-
 });

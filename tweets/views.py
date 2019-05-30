@@ -43,8 +43,12 @@ class IndexView(FormMixin, ListView):
 
 @login_required
 @require_http_methods(["POST"])
-@ratelimit(key='user', rate='5/m', block=True)
+@ratelimit(key='user', rate='5/m')
 def create_post(request):
+    if getattr(request, 'limited', False):
+        messages.add_message(request, messages.WARNING, 'Calm down! Wait a minute before posting again.')
+        return HttpResponseRedirect("/")
+
     filled_out_form = CreatePostForm(request.POST)
     if filled_out_form.is_valid():
         post_text = filled_out_form.cleaned_data['post_text']

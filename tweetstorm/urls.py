@@ -21,6 +21,7 @@ from django.urls import include
 from django.contrib.auth import views as auth_views
 from tweets.views import IndexView, CustomLoginView, CustomRegistrationView
 from two_factor.urls import urlpatterns as tf_urls
+from django_registration.forms import RegistrationFormUniqueEmail
 
 # https://docs.djangoproject.com/en/2.2/topics/auth/default/#using-the-views
 # path('accounts/', include('django.contrib.auth.urls')) includes the following:
@@ -36,7 +37,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('tweets.urls')),
     path('accounts/', include('django_registration.backends.one_step.urls')),
-    path('accounts/', CustomRegistrationView.as_view(), name='django_registration_register'),
+    path('accounts/', CustomRegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='django_registration_register'),
     #path('accounts/login/', auth_views.LoginView.as_view(), name='login'), # custom login view used for ratelimit mixin
     ###path('accounts/login/', CustomLoginView.as_view(), name='login'),
     #path('accounts/logout/', auth_views.LogoutView.as_view()), # we use our own view for this, as Django's default one lacks CSRF protection

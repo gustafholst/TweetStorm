@@ -181,8 +181,8 @@ class AccountSecurityView(TwoFactorProfileView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         username = self.request.user.username
-        context['successful_logins'] = LoginLog.objects.filter(username=self.request.user.username)
-        context['failed_logins'] = FailedLoginLog.objects.filter(username=self.request.user.username)
+        context['successful_logins'] = LoginLog.objects.filter(username=self.request.user.username)[:10]
+        context['failed_logins'] = FailedLoginLog.objects.filter(username=self.request.user.username)[:10]
         return context
 
 class PostView(DetailView):

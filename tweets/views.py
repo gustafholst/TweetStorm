@@ -24,6 +24,9 @@ from ratelimit.decorators import ratelimit
 from ratelimit.mixins import RatelimitMixin
 from django.utils.decorators import method_decorator
 
+from useraudit.models import LoginLog, FailedLoginLog
+from two_factor.views import ProfileView as TwoFactorProfileView
+
 import json
 import re
 
@@ -157,7 +160,7 @@ def rate_limited(request, exception):
 class ProfileView(ListView):
     model = Post
     paginate_by = 10
-    template_name ='user_profile.html'
+    template_name = 'user_profile.html'
 
     def get_queryset(self):
         username = self.kwargs['username']
@@ -167,6 +170,14 @@ class ProfileView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
         context['user'] = get_object_or_404(User, username=self.kwargs['username'])
+        return context
+
+class AccountSecurityView(TwoFactorProfileView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.user.username
+        context['successful_logins'] = LoginLog.objects.filter(username=self.request.user.username)[:10]
+        context['failed_logins'] = FailedLoginLog.objects.filter(username=self.request.user.username)[:10]
         return context
 
 class PostView(DetailView):

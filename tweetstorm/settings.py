@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
+    'useraudit',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tweets.middleware.HeadersForGreatJustice',
-    'ratelimit.middleware.RatelimitMiddleware'
+    'ratelimit.middleware.RatelimitMiddleware',
+    'useraudit.middleware.RequestToThreadLocalMiddleware',
 ]
 
 ROOT_URLCONF = 'tweetstorm.urls'
@@ -95,6 +97,7 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
+    'useraudit.backend.AuthFailedLoggerBackend',
 ]
 
 # Password validation

@@ -1,0 +1,13 @@
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<h2>Reset password</h2>
+
+<p>Someone asked for password reset for email {{ email }}. Click the link below:<p>
+
+<p><a href="{{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}">Reset my password</a><p>
+
+<p>If you did not make this request please ignore this mail.<p>
+
+{% endblock %}

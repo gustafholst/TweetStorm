@@ -178,3 +178,6 @@ EMAIL_HOST_USER = 'twestorm@gmail.com'
 EMAIL_HOST_PASSWORD = 'xoqjjxccbcaovghk'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Tweetstorm Admin <twestorm@gmail.com>'
+
+# Custom CSRF failure error page
+CSRF_FAILURE_VIEW = 'tweets.views.csrf_failure'

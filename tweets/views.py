@@ -220,3 +220,8 @@ class AccountSecurityView(TwoFactorProfileView):
 class PostView(DetailView):
     """View to show a single tweet."""
     model = Post
+
+def csrf_failure(request, reason=""):
+    return render(request, 'error.html',
+                  {'error_title': '403 Forbidden',
+                   'error_message': 'CSRF verification failed. Request aborted.'})

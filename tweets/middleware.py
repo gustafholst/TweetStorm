@@ -9,7 +9,7 @@ class HeadersForGreatJustice:
         # with "same" being same as where this policy is defined), as the only
         # allowed source that resources can be loaded from
         response['Content-Security-Policy'] = "default-src 'self'"
-        # Don't leak referrer information
-        response['Referrer-Policy'] = "no-referrer"
+        # Don't leak referrer information to external sites
+        response['Referrer-Policy'] = "same-origin"
 
         return response

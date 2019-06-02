@@ -150,7 +150,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Where to redirect user after login/logout
@@ -171,13 +171,21 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# https://docs.djangoproject.com/en/2.2/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = ''
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'twestorm@gmail.com'
-EMAIL_HOST_PASSWORD = 'xoqjjxccbcaovghk'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Tweetstorm Admin <twestorm@gmail.com>'
+DEFAULT_FROM_EMAIL = ''
 
 # Custom CSRF failure error page
 CSRF_FAILURE_VIEW = 'tweets.views.csrf_failure'
+
+# We don't want to have secrets in version control so let's try to import
+# an optional extra configuration file that can override things set above.
+try:
+    from .local_settings import *
+except ImportError:
+    pass

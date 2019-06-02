@@ -2,7 +2,7 @@
 %\usepackage[a4paper,margin=24mm]{geometry}
 \usepackage[a4paper]{geometry}
 
-\title{DT167G Software Security VT17\\Group Project}
+\title{DT167G Software Security VT19\\Group Project}
 \author{Alexander Gillberg (algi1701), Gustaf Holst (guho1700), Michaela Hörnfeldt (mihr1401)\\Anders Jensen-Urstad (anje0901), Zahra Zaree (zaza1400)}
 \date{2019-06-02}
 
@@ -192,7 +192,7 @@ On the login page an option is given to reset forgotten passwords. This is done 
 
 \section{Things we don't do}
 
-Use of HTTPS (and secure cookies, Strict Transport Security, etc.) should of course be \emph{absolutely mandatory} on a site like this, but for local development environments a self-signed certificate would cause trust issues unless some extra fiddling is done. So to make it easier for others to test we don’t use HTTPS in VirtualBox image provided.
+Use of HTTPS (and secure cookies, Strict Transport Security, etc.) should of course be \emph{absolutely mandatory} on a site like this, but for local development environments a self-signed certificate would cause trust issues unless some extra fiddling is done. So to make it easier for others to test we don’t use HTTPS in VirtualBox image provided. We do however use HTTPS on a temporary, publicly availabe test site available on \url{https://tweetstorm.unix.se}.
 
 Many other things could be implemented, but were not, because there’s only so much you can do in two weeks. For example, for people who don’t bother setting up 2FA, we could try to detect previously unseen devices and/or locations and, when triggered, send a code by email that the user would have to enter. We could let a user enter a public PGP key and then encrypt all emails to that user (e.g. password reset, ..) with the user’s key. We could have the login cookie only last for the duration of the browser session by default, and have a “Remember me” checkbox in the sign-in form. We could easily have a two-step workflow for registration, where users would have to click on a confirmation link sent by email to activate their account, but decided not to do that for the sake of easier testing.
 

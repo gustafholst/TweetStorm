@@ -1,5 +1,5 @@
 argon2-cffi==19.1.0
-Babel==2.7.0
+Babel==2.9.1
 cffi==1.12.3
 confusable-homoglyphs==3.2.0
 Django==2.2.13
